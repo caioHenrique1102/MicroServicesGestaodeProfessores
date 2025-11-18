@@ -1,0 +1,26 @@
+package com.example.demo.repository;
+
+import com.example.demo.domain.Matriz.Matriz;
+import com.example.demo.domain.disciplina.Disciplina;
+import com.example.demo.domain.matrizDisciplina.MatrizDisciplina;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+public interface MatrizDisciplinaRepository extends JpaRepository<MatrizDisciplina, Long> {
+    Optional<MatrizDisciplina> findByMatrizAndDisciplina(Matriz matriz, Disciplina disciplina);
+    List<MatrizDisciplina> findByMatriz_Curso_Escola_Ativo(boolean ativo);
+
+    List<MatrizDisciplina> findByMatriz_Curso_Escola_AtivoTrueAndDisciplina_AtivoTrue();
+
+
+    @Query("""
+        SELECT md FROM MatrizDisciplina md
+        WHERE md.matriz.curso.escola.id = :escolaId
+    """)
+    List<MatrizDisciplina> findByEscolaId(@Param("escolaId") Long escolaId);
+}
